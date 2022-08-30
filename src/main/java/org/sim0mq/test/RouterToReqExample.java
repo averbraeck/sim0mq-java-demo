@@ -21,23 +21,18 @@ import org.zeromq.ZMQ;
 public final class RouterToReqExample
 {
     /** random stream. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static Random rand = new Random();
 
     /** static counter for worker. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static AtomicInteger staticWorkerRecv = new AtomicInteger();
 
     /** static counter for broker identity. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static AtomicInteger staticBrokerIdRecv = new AtomicInteger();
 
     /** static counter for broker Message. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static AtomicInteger staticBrokerMsgRecv = new AtomicInteger();
 
     /** completed. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static AtomicInteger completed = new AtomicInteger();
 
     /** how many worker threads? */

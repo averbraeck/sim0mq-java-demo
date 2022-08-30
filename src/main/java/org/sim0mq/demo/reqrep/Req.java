@@ -21,7 +21,6 @@ import org.zeromq.ZMQ;
 public class Req
 {
     /** counter to see if we are ready. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     protected AtomicLong counter = new AtomicLong(0);
 
     /**

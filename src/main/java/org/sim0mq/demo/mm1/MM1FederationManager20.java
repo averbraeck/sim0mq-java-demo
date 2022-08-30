@@ -375,8 +375,8 @@ public final class MM1FederationManager20
         private void setParameters(final String federationName) throws Sim0MQException, SerializationException
         {
             Map<String, Object> parameters = new LinkedHashMap<>();
-            parameters.put("iat", new Double(1.0));
-            parameters.put("servicetime", new Double(0.85));
+            parameters.put("iat", Double.valueOf(1.0));
+            parameters.put("servicetime", Double.valueOf(0.85));
             parameters.put("seed", Math.abs(this.modelName.hashCode()));
 
             for (String parameterName : parameters.keySet())

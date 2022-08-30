@@ -34,7 +34,6 @@ public final class DealerRouter
     }
 
     /** random stream. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     static Random rand = new Random(System.nanoTime());
 
     /**

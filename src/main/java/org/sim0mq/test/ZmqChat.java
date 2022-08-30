@@ -50,11 +50,12 @@ public class ZmqChat
         ctx.destroy();
     }
 
+    /** */
     static class ListenerTask implements ZThread.IAttachedRunnable
     {
 
         @Override
-        public void run(Object[] args, ZContext ctx, ZMQ.Socket pipe)
+        public void run(final Object[] args, final ZContext ctx, final ZMQ.Socket pipe)
         {
             ZMQ.Socket listener = ctx.createSocket(ZMQ.SUB);
             int address;

@@ -18,7 +18,6 @@ import org.zeromq.ZMQ;
  * 
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander
  *         Verbraeck</a>
- * @version Oct 21, 2016
  */
 public final class Client {
 	/** */

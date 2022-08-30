@@ -25,10 +25,9 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import nl.tudelft.simulation.dsol.SimRuntimeException;
-import nl.tudelft.simulation.dsol.experiment.Replication;
-import nl.tudelft.simulation.dsol.experiment.ReplicationMode;
+import nl.tudelft.simulation.dsol.experiment.ReplicationInterface;
+import nl.tudelft.simulation.dsol.experiment.SingleReplication;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulator;
-import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 
 /**
  * <p>
@@ -43,7 +42,7 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 public class MM1Queue41Application
 {
     /** */
-    private DEVSSimulator.TimeDouble simulator;
+    private DEVSSimulator<Double> simulator;
 
     /** */
     private MM1Queue41Model model;
@@ -82,7 +81,7 @@ public class MM1Queue41Application
     protected MM1Queue41Application(final String modelId, final int port)
             throws SimRuntimeException, RemoteException, NamingException, Sim0MQException, SerializationException
     {
-        this.simulator = new DEVSSimulator.TimeDouble(modelId + ".simulator");
+        this.simulator = new DEVSSimulator<Double>(modelId + ".simulator");
         this.modelId = modelId.trim();
         this.model = new MM1Queue41Model(this.simulator);
         startListener(port);
@@ -185,9 +184,9 @@ public class MM1Queue41Application
             status = "running";
         }
         else if (this.simulator.getSimulatorTime() != null && this.simulator.getReplication() != null
-                && this.simulator.getReplication().getTreatment() != null)
+                && this.simulator.getReplication().getRunControl() != null)
         {
-            if (this.simulator.getSimulatorTime() >= this.simulator.getReplication().getTreatment().getEndTime())
+            if (this.simulator.getSimulatorTime() >= this.simulator.getReplication().getRunControl().getEndTime())
             {
                 status = "ended";
             }
@@ -330,9 +329,9 @@ public class MM1Queue41Application
         String error = "";
         try
         {
-            Replication.TimeDouble<DEVSSimulatorInterface.TimeDouble> replication =
-                    Replication.TimeDouble.create("rep1", 0.0, this.warmupDuration.si, this.runDuration.si, this.model);
-            this.simulator.initialize(replication, ReplicationMode.TERMINATING);
+            ReplicationInterface<Double> replication =
+                    new SingleReplication<Double>("rep1", 0.0, this.warmupDuration.si, this.runDuration.si);
+            this.simulator.initialize(this.model, replication);
             this.simulator.scheduleEventAbs(100.0, this, this, "terminate", null);
 
             this.simulator.start();

@@ -25,7 +25,6 @@
     <djutils.version>1.05.04</djutils.version>
     <dsol.version>4.0.0</dsol.version>
     <jeromq.version>0.5.2</jeromq.version>
-    <junit.version>4.12</junit.version>
 
     <maven.compiler.version>3.10.1</maven.compiler.version>
     <maven.resources.version>3.3.0</maven.resources.version>
@@ -35,13 +34,6 @@
   <!-- dependency versions for all projects -->
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-      <optional>true</optional>
-    </dependency>
     <dependency>
       <groupId>org.sim0mq</groupId>
       <artifactId>sim0mq</artifactId>

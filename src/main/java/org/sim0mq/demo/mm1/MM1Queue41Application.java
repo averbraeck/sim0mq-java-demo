@@ -25,13 +25,13 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import nl.tudelft.simulation.dsol.SimRuntimeException;
-import nl.tudelft.simulation.dsol.experiment.ReplicationInterface;
+import nl.tudelft.simulation.dsol.experiment.Replication;
 import nl.tudelft.simulation.dsol.experiment.SingleReplication;
-import nl.tudelft.simulation.dsol.simulators.DEVSSimulator;
+import nl.tudelft.simulation.dsol.simulators.DevsSimulator;
 
 /**
  * <p>
- * Copyright (c) 2015-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
+ * Copyright (c) 2015-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
  * <p>
  * See for project information <a href="http://www.simulation.tudelft.nl/"> www.simulation.tudelft.nl</a>.
  * <p>
@@ -42,7 +42,7 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulator;
 public class MM1Queue41Application
 {
     /** */
-    private DEVSSimulator<Double> simulator;
+    private DevsSimulator<Double> simulator;
 
     /** */
     private MM1Queue41Model model;
@@ -81,7 +81,7 @@ public class MM1Queue41Application
     protected MM1Queue41Application(final String modelId, final int port)
             throws SimRuntimeException, RemoteException, NamingException, Sim0MQException, SerializationException
     {
-        this.simulator = new DEVSSimulator<Double>(modelId + ".simulator");
+        this.simulator = new DevsSimulator<Double>(modelId + ".simulator");
         this.modelId = modelId.trim();
         this.model = new MM1Queue41Model(this.simulator);
         startListener(port);
@@ -158,8 +158,8 @@ public class MM1Queue41Application
             else
             {
                 // wrong receiver
-                System.err.println("Received message not intended for " + this.modelId + " but for " + receiverId
-                        + " -- not processed");
+                System.err.println(
+                        "Received message not intended for " + this.modelId + " but for " + receiverId + " -- not processed");
             }
         }
     }
@@ -197,8 +197,8 @@ public class MM1Queue41Application
         }
         this.fsSocket.sendMore(identity);
         this.fsSocket.sendMore("");
-        byte[] mc1Message = new MC1StatusMessage(this.federationRunId, this.modelId, message.getSenderId(),
-                ++this.messageCount, message.getMessageId(), status, "").createByteArray();
+        byte[] mc1Message = new MC1StatusMessage(this.federationRunId, this.modelId, message.getSenderId(), ++this.messageCount,
+                message.getMessageId(), status, "").createByteArray();
         this.fsSocket.send(mc1Message, 0);
 
         System.out.println("Sent MC.1");
@@ -252,8 +252,8 @@ public class MM1Queue41Application
             status = false;
             error = e.getMessage();
         }
-        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(),
-                ++this.messageCount, message.getMessageId(), status, error).createByteArray();
+        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(), ++this.messageCount,
+                message.getMessageId(), status, error).createByteArray();
         this.fsSocket.sendMore(identity);
         this.fsSocket.sendMore("");
         this.fsSocket.send(mc2Message, 0);
@@ -305,8 +305,8 @@ public class MM1Queue41Application
             error = e.getMessage();
         }
 
-        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(),
-                ++this.messageCount, message.getMessageId(), status, error).createByteArray();
+        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(), ++this.messageCount,
+                message.getMessageId(), status, error).createByteArray();
         this.fsSocket.sendMore(identity);
         this.fsSocket.sendMore("");
         this.fsSocket.send(mc2Message, 0);
@@ -329,10 +329,10 @@ public class MM1Queue41Application
         String error = "";
         try
         {
-            ReplicationInterface<Double> replication =
+            Replication<Double> replication =
                     new SingleReplication<Double>("rep1", 0.0, this.warmupDuration.si, this.runDuration.si);
             this.simulator.initialize(this.model, replication);
-            this.simulator.scheduleEventAbs(100.0, this, this, "terminate", null);
+            this.simulator.scheduleEventAbs(100.0, this, "terminate", null);
 
             this.simulator.start();
         }
@@ -342,8 +342,8 @@ public class MM1Queue41Application
             error = e.getMessage();
         }
 
-        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(),
-                ++this.messageCount, message.getMessageId(), status, error).createByteArray();
+        byte[] mc2Message = new MC2AckNakMessage(this.federationRunId, this.modelId, message.getSenderId(), ++this.messageCount,
+                message.getMessageId(), status, error).createByteArray();
         this.fsSocket.sendMore(identity);
         this.fsSocket.sendMore("");
         this.fsSocket.send(mc2Message, 0);
@@ -438,7 +438,7 @@ public class MM1Queue41Application
     /** stop the simulation. */
     protected final void terminate()
     {
-        System.out.println("average queue length = " + this.model.qN.getSampleMean());
+        System.out.println("average queue length = " + this.model.qN.getWeightedSampleMean());
         System.out.println("average queue wait   = " + this.model.dN.getSampleMean());
         System.out.println("average utilization  = " + this.model.uN.getWeightedSampleMean());
     }
@@ -462,7 +462,7 @@ public class MM1Queue41Application
 
         System.out.println("Started with args: " + args[0] + " " + args[1]);
         System.out.flush();
-        
+
         String modelId = args[0];
 
         String sPort = args[1];

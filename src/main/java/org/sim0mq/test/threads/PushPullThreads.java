@@ -92,7 +92,6 @@ public class PushPullThreads
             start();
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {
@@ -119,7 +118,6 @@ public class PushPullThreads
             this.ctx = ctx;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

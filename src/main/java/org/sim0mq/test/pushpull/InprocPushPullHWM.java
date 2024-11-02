@@ -54,7 +54,6 @@ public final class InprocPushPullHWM
             start();
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {
@@ -83,7 +82,6 @@ public final class InprocPushPullHWM
             start();
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

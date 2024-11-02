@@ -72,7 +72,6 @@ public class Rep
             this.port = port;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

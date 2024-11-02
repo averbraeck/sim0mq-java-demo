@@ -71,7 +71,6 @@ public final class PairServer
             this.socket = socket;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

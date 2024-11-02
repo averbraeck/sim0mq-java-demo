@@ -63,7 +63,6 @@ public class MM1Queue41Model extends AbstractDsolModel<Double, DevsSimulator<Dou
         super(simulator);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final void constructModel() throws SimRuntimeException
     {

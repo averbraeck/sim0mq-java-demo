@@ -76,7 +76,6 @@ public final class Server
             this.server = server;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

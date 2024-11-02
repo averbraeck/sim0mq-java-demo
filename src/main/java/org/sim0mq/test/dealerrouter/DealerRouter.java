@@ -42,7 +42,6 @@ public final class DealerRouter
      */
     static class ClientTask implements Runnable
     {
-        /** {@inheritDoc} */
         @Override
         public void run()
         {
@@ -84,7 +83,6 @@ public final class DealerRouter
      */
     static class ServerTask implements Runnable
     {
-        /** {@inheritDoc} */
         @Override
         public void run()
         {
@@ -128,7 +126,6 @@ public final class DealerRouter
             this.ctx = ctx;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

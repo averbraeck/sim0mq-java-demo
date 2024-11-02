@@ -50,7 +50,6 @@ public final class InprocPushPull
             start();
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {
@@ -78,7 +77,6 @@ public final class InprocPushPull
             start();
         }
 
-        /** {@inheritDoc} */
         @Override
         public void run()
         {

@@ -31,7 +31,7 @@ import nl.tudelft.simulation.dsol.simulators.DevsSimulator;
 
 /**
  * <p>
- * Copyright (c) 2015-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
+ * Copyright (c) 2015-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
  * <p>
  * See for project information <a href="http://www.simulation.tudelft.nl/"> www.simulation.tudelft.nl</a>.
  * <p>

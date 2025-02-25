@@ -19,7 +19,7 @@ import org.zeromq.ZMsg;
  * <a href="http://zguide.zeromq.org/page:all#The-Asynchronous-Client-Server-Pattern">
  * http://zguide.zeromq.org/page:all#The-Asynchronous-Client-Server-Pattern</a>.
  * <p>
- * Copyright (c) 2013-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2013-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="http://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
  * </p>
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>

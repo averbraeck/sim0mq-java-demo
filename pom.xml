@@ -23,7 +23,7 @@
     <sim0mq.version>${project.version}</sim0mq.version>
     <djunits.version>5.2.2</djunits.version>
     <djutils.version>2.3.2</djutils.version>
-    <dsol.version>4.2.4</dsol.version>
+    <dsol.version>4.2.9</dsol.version>
     <jeromq.version>0.6.0</jeromq.version>
 
     <maven.compiler.version>3.14.0</maven.compiler.version>
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>nl.tudelft.simulation</groupId>
-      <artifactId>dsol-core</artifactId>
+      <artifactId>dsol-flow</artifactId>
       <version>${dsol.version}</version>
     </dependency>
   </dependencies>

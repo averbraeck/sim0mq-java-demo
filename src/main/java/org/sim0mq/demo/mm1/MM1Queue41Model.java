@@ -1,20 +1,19 @@
 package org.sim0mq.demo.mm1;
 
 import nl.tudelft.simulation.dsol.SimRuntimeException;
-import nl.tudelft.simulation.dsol.formalisms.Resource;
 import nl.tudelft.simulation.dsol.formalisms.flow.Create;
 import nl.tudelft.simulation.dsol.formalisms.flow.Delay;
 import nl.tudelft.simulation.dsol.formalisms.flow.Entity;
-import nl.tudelft.simulation.dsol.formalisms.flow.FlowObject;
 import nl.tudelft.simulation.dsol.formalisms.flow.Release;
+import nl.tudelft.simulation.dsol.formalisms.flow.Resource;
 import nl.tudelft.simulation.dsol.formalisms.flow.Seize;
-import nl.tudelft.simulation.dsol.formalisms.flow.statistics.Utilization;
 import nl.tudelft.simulation.dsol.model.AbstractDsolModel;
 import nl.tudelft.simulation.dsol.simtime.dist.DistContinuousSimulationTime;
 import nl.tudelft.simulation.dsol.simulators.DevsSimulator;
 import nl.tudelft.simulation.dsol.statistics.SimPersistent;
 import nl.tudelft.simulation.dsol.statistics.SimTally;
 import nl.tudelft.simulation.jstats.distributions.DistConstant;
+import nl.tudelft.simulation.jstats.distributions.DistDiscreteConstant;
 import nl.tudelft.simulation.jstats.distributions.DistExponential;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
@@ -43,7 +42,7 @@ public class MM1Queue41Model extends AbstractDsolModel<Double, DevsSimulator<Dou
 
     /** utilization uN. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    Utilization<Double> uN;
+    SimPersistent<Double> uN;
 
     /** PARAMETER iat. */
     public double iat = Double.NaN;
@@ -74,45 +73,46 @@ public class MM1Queue41Model extends AbstractDsolModel<Double, DevsSimulator<Dou
         {
             throw new SimRuntimeException("Parameter servicetime not defined for model");
         }
+        
+        System.out.println("iat=" + this.iat + ", st=" + this.serviceTime);
 
         StreamInterface defaultStream = new MersenneTwister(this.seed);
 
         // The Generator
-        Create<Double> generator = new Create<Double>("generate", this.simulator,
-                new DistContinuousSimulationTime.TimeDouble(new DistConstant(defaultStream, 0.0)),
-                new DistContinuousSimulationTime.TimeDouble(new DistExponential(defaultStream, this.iat)), 1)
-        {
-            private static final long serialVersionUID = 1L;
+        Create<Double> generator = new Create<Double>("generate", this.simulator)
+                .setStartTimeDist(new DistContinuousSimulationTime.TimeDouble(new DistConstant(defaultStream, 0.0)))
+                .setIntervalDist(new DistContinuousSimulationTime.TimeDouble(new DistExponential(defaultStream, this.iat)))
+                .setBatchSizeDist(new DistDiscreteConstant(defaultStream, 1))
+                .setEntitySupplier(() -> new Entity<Double>("entity", getSimulator()));
+        generator.setMaxNumberGeneratedEntities(1000);
 
-            @Override
-            protected Entity<Double> generateEntity()
-            {
-                return new Entity<Double>("entity", getSimulator().getSimulatorTime());
-            }
-        };
-        generator.setMaxNumber(1000);
+        // The queue and resource
+        var resource = new Resource.DoubleCapacity<>("resource", this.simulator, 1.0);
+        resource.setDefaultStatistics();
 
-        // The queue, the resource and the release
-        Resource<Double> resource = new Resource<>("resource", this.simulator, 1.0);
+        // created the claiming of the resource
+        var seize = new Seize.DoubleCapacity<Double>("Seize", this.simulator, resource);
+        seize.setFixedCapacityClaim(1.0);
+        seize.setDefaultStatistics();
 
-        // created the claiming and releasing of the resource
-        FlowObject<Double> queue = new Seize<Double>("Seize", this.simulator, resource);
-        FlowObject<Double> release = new Release<Double>("Release", this.simulator, resource, 1.0);
-
-        // The server
-        DistContinuousSimulationTime<Double> serviceTimeDistribution =
+        // The delay for the service
+        DistContinuousSimulationTime<Double> serviceTime =
                 new DistContinuousSimulationTime.TimeDouble(new DistExponential(defaultStream, this.serviceTime));
-        FlowObject<Double> server = new Delay<Double>("Delay", this.simulator, serviceTimeDistribution);
+        var service = new Delay<Double>("Delay", this.simulator).setDelayDistribution(serviceTime);
+
+        // release the claimed resource
+        var release = new Release.DoubleCapacity<Double>("Release", this.simulator, resource);
+        release.setFixedCapacityRelease(1.0);
 
         // The flow
-        generator.setDestination(queue);
-        queue.setDestination(server);
-        server.setDestination(release);
+        generator.setDestination(seize);
+        seize.setDestination(service);
+        service.setDestination(release);
 
         // Statistics
-        this.dN = new SimTally<Double>("d(n)", this, queue, Seize.DELAY_TIME);
-        this.qN = new SimPersistent<Double>("q(n)", this, queue, Seize.QUEUE_LENGTH_EVENT);
-        this.uN = new Utilization<>("u(n)", this, server);
+        this.dN = seize.getStorageTimeStatistic();
+        this.qN = seize.getNumberStoredStatistic();
+        this.uN = resource.getUtilizationStatistic();
     }
 
 }
